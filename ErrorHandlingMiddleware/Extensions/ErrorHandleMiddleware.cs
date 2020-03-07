@@ -33,10 +33,15 @@ namespace ErrorHandlingMiddleware.Extensions
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError;
+            var appErrorCode = (int)ApplcaitonErrorCode.UnknownError;
             if(ex is Application.ApplicationException)
+            {
+                var applicationError = ex as Application.ApplicationException;
                 code = HttpStatusCode.BadRequest;
+                appErrorCode = applicationError.ErrorCode;
+            }
 
-            var result = JsonConvert.SerializeObject(new ErrorResponse((int)code, ex.Message));
+            var result = JsonConvert.SerializeObject(new ErrorResponse(appErrorCode, ex.Message));
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);
