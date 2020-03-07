@@ -28,8 +28,6 @@ namespace ErrorHandlingMiddleware.Extensions
             {
                 await HandleExceptionAsync(context, ex);
             }
-
-
         }
 
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
